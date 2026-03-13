@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>이준경 — 서비스 기획자 포트폴리오</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+  <style>
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    :root{
+      --ink:#111827;--sub:#4B5563;--muted:#9CA3AF;--faint:#D1D5DB;
+      --line:#E5E7EB;--bg:#F9FAFB;--white:#fff;
+      --blue:#2563EB;--blue-bg:#EFF6FF;
+      --teal:#0D9488;--teal-bg:#F0FDFA;
+      --violet:#7C3AED;--violet-bg:#F5F3FF;
+    }
+    html{overflow:hidden}
+    body{
+      font-family:'Pretendard',-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
+      color:var(--ink);line-height:1.7;background:#E5E7EB;
+      overflow:hidden;height:100vh;-webkit-font-smoothing:antialiased;
+    }
+
+    /* Deck */
+    .deck{display:flex;height:100vh;transition:transform .5s cubic-bezier(.22,1,.36,1)}
+    .slide{
+      width:100vw;height:100vh;flex-shrink:0;
+      display:flex;flex-direction:column;
+      background:var(--white);
+    }
+
+    /* Crumb */
+    .crumb{
+      height:38px;flex-shrink:0;
+      display:flex;align-items:center;gap:6px;
+      padding:0 48px;border-bottom:1px solid var(--line);
+      font-size:.7rem;color:var(--muted);font-weight:500;
+    }
+    .crumb .sep{color:var(--faint)}
+    .crumb .here{color:var(--ink);font-weight:650}
+    .crumb .cdot{width:6px;height:6px;border-radius:50%;display:inline-block;margin-right:4px}
+    .crumb .cdot.teal{background:var(--teal)}
+    .crumb .cdot.blue{background:var(--blue)}
+    .crumb .cdot.violet{background:var(--violet)}
+
+    /* Slide body — 모든 콘텐츠 중앙 정렬 */
+    .slide-scroll{
+      flex:1;overflow-y:auto;
+      display:flex;justify-content:center;align-items:center;
+      scrollbar-width:thin;scrollbar-color:var(--line) transparent;
+    }
+    .slide-scroll::-webkit-scrollbar{width:3px}
+    .slide-scroll::-webkit-scrollbar-thumb{background:var(--line);border-radius:3px}
+
+    .ct{
+      width:100%;max-width:760px;
+      padding:40px 32px 72px;
+    }
+
+    /* Dark slides */
+    .slide.dark{background:var(--ink)}
+    .slide.dark .slide-scroll{align-items:center}
+
+    /* Nav */
+    .nav{
+      position:fixed;bottom:0;left:0;right:0;z-index:100;
+      background:rgba(255,255,255,.92);backdrop-filter:blur(12px);
+      border-top:1px solid var(--line);
+      display:flex;align-items:center;justify-content:space-between;
+      padding:8px 32px;height:44px;
+    }
+    .nav-pg{font-size:.7rem;color:var(--muted);font-weight:500;font-variant-numeric:tabular-nums;min-width:50px}
+    .nav-dots{display:flex;gap:4px}
+    .nav-dot{
+      width:6px;height:6px;border-radius:3px;
+      background:var(--faint);border:none;cursor:pointer;padding:0;transition:all .3s;
+    }
+    .nav-dot.active{width:18px}
+    .nav-dot.c-teal.active{background:var(--teal)}
+    .nav-dot.c-blue.active{background:var(--blue)}
+    .nav-dot.c-violet.active{background:var(--violet)}
+    .nav-dot.c-default.active{background:var(--ink)}
+    .nav-arrows{display:flex;gap:6px}
+    .nav-btn{
+      width:30px;height:30px;border-radius:6px;
+      border:1px solid var(--line);background:var(--white);
+      cursor:pointer;display:flex;align-items:center;justify-content:center;
+      color:var(--sub);font-size:.82rem;transition:all .15s;
+    }
+    .nav-btn:hover{border-color:var(--ink);color:var(--ink)}
+    .nav-btn:disabled{opacity:.2;pointer-events:none}
+
+    /* Type */
+    h1{font-size:2.4rem;font-weight:800;line-height:1.25;letter-spacing:-.02em}
+    h2{font-size:1.3rem;font-weight:700;line-height:1.4;letter-spacing:-.01em;margin-bottom:16px}
+    h3{font-size:.95rem;font-weight:650;line-height:1.5}
+    p{color:var(--sub);font-size:.9rem;line-height:1.75}
+    strong{color:var(--ink);font-weight:650}
+
+    .badge{
+      display:inline-block;font-size:.62rem;font-weight:700;
+      letter-spacing:1px;text-transform:uppercase;
+      padding:2px 8px;border-radius:3px;margin-bottom:10px;
+    }
+    .badge.teal{background:var(--teal-bg);color:var(--teal)}
+    .badge.blue{background:var(--blue-bg);color:var(--blue)}
+    .badge.violet{background:var(--violet-bg);color:var(--violet)}
+
+    .meta{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:16px;font-size:.76rem;color:var(--muted)}
+    .meta strong{color:var(--sub);font-weight:600}
+
+    /* 핵심 한줄 문장 */
+    .lead{
+      font-size:.95rem;font-weight:500;color:var(--ink);
+      line-height:1.75;margin-bottom:20px;
+      padding-left:14px;border-left:2px solid var(--teal);
+    }
+    .lead.blue{border-left-color:var(--blue)}
+    .lead.violet{border-left-color:var(--violet)}
+
+    /* Flow */
+    .flow{display:flex;align-items:center;gap:4px;margin:16px 0;flex-wrap:wrap}
+    .fs{
+      font-size:.7rem;font-weight:600;padding:4px 10px;border-radius:4px;
+      background:var(--bg);color:var(--sub);border:1px solid var(--line);
+    }
+    .fs.on{color:var(--white);border-color:transparent}
+    .fs.on.teal{background:var(--teal)}
+    .fs.on.blue{background:var(--blue)}
+    .fs.on.violet{background:var(--violet)}
+    .fa{color:var(--faint);font-size:.7rem}
+
+    /* Quote block — Why/Impact를 자연스러운 문장으로 */
+    .aside{
+      background:var(--bg);border-radius:6px;
+      padding:14px 18px;margin:16px 0;
+      font-size:.86rem;line-height:1.7;color:var(--sub);
+    }
+
+    .result{
+      border-radius:6px;padding:14px 18px;margin:16px 0;
+      font-size:.86rem;line-height:1.7;
+    }
+    .result.teal{background:var(--teal-bg);color:var(--teal)}
+    .result.blue{background:var(--blue-bg);color:var(--blue)}
+    .result.violet{background:var(--violet-bg);color:var(--violet)}
+    .result strong{color:inherit}
+
+    /* Gallery */
+    .gallery{display:grid;gap:10px;margin:16px 0}
+    .gallery.g2{grid-template-columns:1fr 1fr}
+    .gallery.g3{grid-template-columns:1fr 1fr 1fr}
+    .gallery.g4{grid-template-columns:1fr 1fr 1fr 1fr}
+    .gallery figure{margin:0;cursor:pointer}
+    .gallery img{width:100%;border-radius:4px;border:1px solid var(--line);object-fit:cover;transition:opacity .15s}
+    .gallery img:hover{opacity:.85}
+    .gallery figcaption{text-align:center;font-size:.66rem;color:var(--muted);margin-top:3px}
+
+    .screens{display:flex;gap:12px;justify-content:center;margin:16px 0}
+    .screens img{height:200px;width:auto;border-radius:10px;border:1px solid var(--line);cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+    .screens img:hover{opacity:.85}
+
+    /* Stats */
+    .stats{display:flex;gap:10px;margin:20px 0}
+    .stat{flex:1;text-align:center;padding:14px 8px;background:var(--bg);border-radius:8px;border:1px solid var(--line)}
+    .sv{font-size:1.4rem;font-weight:800;line-height:1;margin-bottom:3px}
+    .sv.violet{color:var(--violet)}
+    .sd{font-size:.66rem;color:var(--muted)}
+
+    /* List */
+    ul.wl{margin:8px 0 12px;padding-left:18px;font-size:.86rem;color:var(--sub);line-height:1.75}
+    ul.wl li{margin-bottom:3px}
+
+    .sn{
+      display:inline-flex;align-items:center;justify-content:center;
+      width:20px;height:20px;border-radius:4px;
+      color:var(--white);font-size:.68rem;font-weight:700;
+      margin-right:6px;vertical-align:middle;
+    }
+    .sn.blue{background:var(--blue)}
+    .sn.violet{background:var(--violet)}
+
+    .note{font-size:.68rem;color:var(--muted);margin-top:10px}
+
+    .tag{
+      display:inline-block;font-size:.7rem;font-weight:500;
+      padding:2px 8px;border-radius:4px;
+      background:var(--bg);color:var(--sub);
+      border:1px solid var(--line);margin:2px 2px 2px 0;
+    }
+
+    /* Placeholder */
+    .placeholder{
+      border:2px dashed var(--faint);border-radius:8px;
+      padding:20px;text-align:center;color:var(--muted);
+      font-size:.78rem;margin:16px 0;background:var(--bg);line-height:1.6;
+    }
+    .ph-t{font-weight:700;color:var(--sub);font-size:.8rem;margin-bottom:4px}
+    .ph-img{
+      border:2px dashed var(--faint);border-radius:6px;background:var(--bg);
+      display:flex;flex-direction:column;align-items:center;justify-content:center;
+      color:var(--muted);font-size:.72rem;text-align:center;padding:16px 10px;min-height:130px;
+    }
+    .ph-img .ico{font-size:1.3rem;margin-bottom:4px;opacity:.4}
+
+    /* Overview */
+    .ov-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:20px}
+    .ov-label{font-size:.72rem;color:var(--muted);font-weight:600;letter-spacing:.5px;margin-bottom:8px}
+    .tl-row{display:flex;gap:0}
+    .tl-bar{width:16px;flex-shrink:0;display:flex;flex-direction:column;align-items:center}
+    .tl-dot{width:7px;height:7px;border-radius:50%;background:var(--ink);flex-shrink:0;margin-top:6px}
+    .tl-dot.now{background:var(--teal)}
+    .tl-dot.sm{width:5px;height:5px;background:var(--muted);margin-top:7px}
+    .tl-line{width:1px;flex:1;background:var(--line)}
+    .tl-body{padding:0 0 14px 8px;flex:1}
+    .tl-org{font-weight:650;font-size:.86rem}
+    .tl-date{font-size:.7rem;color:var(--muted);margin-left:6px}
+    .tl-desc{font-size:.78rem;color:var(--sub);margin-top:1px}
+
+    .pc{border:1px solid var(--line);border-radius:8px;padding:14px 16px;margin-bottom:10px;border-left:3px solid}
+    .pc.teal{border-left-color:var(--teal)}
+    .pc.blue{border-left-color:var(--blue)}
+    .pc.violet{border-left-color:var(--violet)}
+    .pc-t{font-weight:650;font-size:.88rem;margin-bottom:2px}
+    .pc-r{font-size:.72rem;color:var(--muted);margin-bottom:6px}
+    .pc-nums{display:flex;gap:10px}
+    .pc-n{font-size:.72rem}
+    .pc-n strong{font-size:.95rem}
+    .pc-n.teal strong{color:var(--teal)}
+    .pc-n.blue strong{color:var(--blue)}
+    .pc-n.violet strong{color:var(--violet)}
+
+    /* Separator */
+    .sep-line{height:1px;background:var(--line);margin:20px 0}
+
+    /* Lightbox */
+    .lightbox{
+      display:none;position:fixed;inset:0;z-index:200;
+      background:rgba(0,0,0,.85);align-items:center;justify-content:center;cursor:zoom-out;
+    }
+    .lightbox.open{display:flex}
+    .lightbox img{max-width:90vw;max-height:85vh;border-radius:6px}
+    .lightbox .wm{
+      position:absolute;color:rgba(255,255,255,.12);
+      font-size:2.5rem;font-weight:800;transform:rotate(-25deg);
+      pointer-events:none;user-select:none;letter-spacing:8px;
+    }
+    .lb-close{position:absolute;top:20px;right:24px;color:rgba(255,255,255,.5);font-size:1.5rem;cursor:pointer;border:none;background:none}
+
+    /* Responsive */
+    @media(max-width:768px){
+      .ct{padding:28px 20px 68px}
+      h1{font-size:1.7rem}
+      .ov-grid{grid-template-columns:1fr}
+      .gallery.g3,.gallery.g4{grid-template-columns:1fr 1fr}
+      .screens img{height:180px}
+      .crumb{padding:0 20px}
+      .nav-dots{display:none}
+      .stats{flex-wrap:wrap}
+      .stat{min-width:calc(50% - 5px)}
+    }
+
+    /* Print */
+    @media print{
+      @page{size:A4 landscape;margin:0}
+      html,body{overflow:visible;height:auto;background:white}
+      .deck{display:block;transform:none!important}
+      .slide{width:297mm;height:210mm;page-break-after:always;page-break-inside:avoid;overflow:hidden}
+      .slide:last-child{page-break-after:avoid}
+      .crumb{height:26px;padding:0 20px;font-size:.6rem}
+      .ct{max-height:calc(210mm - 26px);overflow:hidden;padding:14px 24px}
+      .nav{display:none!important}
+      .lightbox{display:none!important}
+      h1{font-size:1.4rem}h2{font-size:1.05rem}
+      p,li,.aside,.result{font-size:.75rem}
+      .screens img{height:150px}
+      .gallery img{max-height:110px;object-fit:contain}
+      .tag{font-size:.6rem;padding:1px 5px}
+      -webkit-print-color-adjust:exact;print-color-adjust:exact;
+    }
+  </style>
+</head>
+<body>
+
+<div class="deck" id="deck">
+
+<!-- ===== 01 COVER ===== -->
+<div class="slide" data-color="default" style="position:relative;overflow:hidden;background:#0a0a10">
+  <!-- 배경 그라데이션: 짙은 네이비 베이스 + 블루 포인트 -->
+  <div style="position:absolute;inset:0;background:
+    linear-gradient(145deg, #0a0a10 0%, #0d1428 25%, #111d3a 50%, #0d1428 75%, #0a0a10 100%);
+    pointer-events:none"></div>
+  <!-- 우상단 블루 글로우 -->
+  <div style="position:absolute;inset:0;background:
+    radial-gradient(ellipse 70% 55% at 75% 20%, rgba(37,99,235,.18) 0%, transparent 55%);
+    pointer-events:none"></div>
+  <!-- 좌하단 블루 글로우 -->
+  <div style="position:absolute;inset:0;background:
+    radial-gradient(ellipse 55% 60% at 20% 80%, rgba(30,64,175,.12) 0%, transparent 50%);
+    pointer-events:none"></div>
+  <!-- 상단 하이라이트 라인 -->
+  <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent 10%,rgba(60,130,246,.3) 50%,transparent 90%);pointer-events:none"></div>
+
+  <div class="slide-scroll" style="align-items:center">
+    <div class="ct" style="display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;max-width:680px;position:relative;z-index:1">
+
+      <!-- 이름 -->
+      <div style="font-size:1.5rem;font-weight:700;letter-spacing:4px;color:rgba(255,255,255,.45);margin-bottom:18px">이준경</div>
+
+      <!-- PORTFOLIO — 영문 크게 -->
+      <h1 style="color:#fff;margin-bottom:28px;font-size:4.5rem;line-height:1;font-weight:800;letter-spacing:6px;text-transform:uppercase">
+        PORTFOLIO
+      </h1>
+
+      <!-- 서브 카피 -->
+      <p style="font-size:.95rem;color:rgba(255,255,255,.42);line-height:1.85;margin-bottom:40px;font-weight:400;max-width:480px">
+        서비스 기획 5년차 · 구축과 운영을 모두 경험한 기획자<br>
+        <span style="color:rgba(255,255,255,.28)">AI를 활용해 빠르게 판단하고 관제합니다</span>
+      </p>
+
+      <!-- 프로젝트 키워드 -->
+      <div style="display:flex;gap:10px;margin-bottom:52px;flex-wrap:wrap;justify-content:center">
+        <span style="font-size:.78rem;font-weight:600;padding:7px 18px;border-radius:22px;background:rgba(37,99,235,.08);border:1px solid rgba(37,99,235,.2);color:rgba(130,170,255,.85);backdrop-filter:blur(8px)">케도인리조트 리뉴얼 PL</span>
+        <span style="font-size:.78rem;font-weight:600;padding:7px 18px;border-radius:22px;background:rgba(37,99,235,.08);border:1px solid rgba(37,99,235,.2);color:rgba(130,170,255,.85);backdrop-filter:blur(8px)">GS리테일 리뉴얼 기획</span>
+        <span style="font-size:.78rem;font-weight:600;padding:7px 18px;border-radius:22px;background:rgba(37,99,235,.08);border:1px solid rgba(37,99,235,.2);color:rgba(130,170,255,.85);backdrop-filter:blur(8px)">LG전자 멤버십 3년 6개월</span>
+      </div>
+
+      <!-- 하단 정보 -->
+      <div style="display:flex;align-items:center;gap:22px;font-size:.82rem;color:rgba(255,255,255,.25)">
+        <span>jklee199809@gmail.com</span>
+        <span style="width:1px;height:11px;background:rgba(255,255,255,.1)"></span>
+        <span>010-9599-8227</span>
+        <span style="width:1px;height:11px;background:rgba(255,255,255,.1)"></span>
+        <span>2026</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 02 OVERVIEW ===== -->
+<div class="slide" data-color="default">
+  <div class="crumb">포트폴리오 <span class="sep">/</span> <span class="here">전체 요약</span></div>
+  <div class="slide-scroll" style="align-items:center">
+    <div class="ct" style="max-width:680px;padding-top:28px;padding-bottom:48px">
+
+      <!-- 헤드 영역 -->
+      <div style="margin-bottom:24px;display:flex;align-items:baseline;gap:10px">
+        <h2 style="font-size:1.15rem;font-weight:700;margin-bottom:0;letter-spacing:-.01em">Overview</h2>
+        <span style="font-size:.72rem;color:var(--muted);font-weight:500">경력 5년차 · 총 4년 4개월</span>
+      </div>
+
+      <!-- 경력 카드 -->
+      <div style="display:flex;gap:12px;margin-bottom:20px">
+        <div style="flex:1;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:14px 16px">
+          <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px">
+            <span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#22c55e;box-shadow:0 0 6px rgba(34,197,94,.4)"></span>
+            <span style="font-size:.66rem;font-weight:600;color:#22c55e;letter-spacing:.5px">재직중</span>
+          </div>
+          <div style="font-weight:650;font-size:.88rem">㈜리앙에이지</div>
+          <div style="font-size:.72rem;color:var(--muted);margin-top:2px">2025.08 ~</div>
+        </div>
+        <div style="flex:1;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:14px 16px">
+          <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px">
+            <span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--muted)"></span>
+            <span style="font-size:.66rem;font-weight:600;color:var(--muted);letter-spacing:.5px">3년 8개월</span>
+          </div>
+          <div style="font-weight:650;font-size:.88rem">㈜지엠솔루션</div>
+          <div style="font-size:.72rem;color:var(--muted);margin-top:2px">2021.04 ~ 2024.11</div>
+        </div>
+      </div>
+
+      <!-- 프로젝트 카드 -->
+      <div style="margin-bottom:20px">
+        <div class="ov-label" style="margin-bottom:10px">프로젝트</div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:8px;border:1px solid var(--line);border-left:3px solid var(--teal)">
+            <div style="flex:1">
+              <div style="font-weight:650;font-size:.86rem">케도인리조트 홈페이지 리뉴얼</div>
+              <div style="font-size:.72rem;color:var(--muted);margin-top:2px">기획 PL · IA 설계 → 화면설계 → QA → 배포 → 운영까지 전 구간 수행</div>
+            </div>
+            <div style="flex-shrink:0;text-align:right">
+              <span style="font-size:.68rem;font-weight:600;color:var(--teal);background:var(--teal-bg);padding:2px 8px;border-radius:4px">구축+운영</span>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:8px;border:1px solid var(--line);border-left:3px solid var(--blue)">
+            <div style="flex:1">
+              <div style="font-weight:650;font-size:.86rem">GS리테일 홈페이지 리뉴얼</div>
+              <div style="font-size:.72rem;color:var(--muted);margin-top:2px">RFP 분석 → 요구사항 정의 → IA 재설계 · Claude Code로 전 구간 빠르게 수행</div>
+            </div>
+            <div style="flex-shrink:0;text-align:right">
+              <span style="font-size:.68rem;font-weight:600;color:var(--blue);background:var(--blue-bg);padding:2px 8px;border-radius:4px">초기 분석</span>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:8px;border:1px solid var(--line);border-left:3px solid var(--violet)">
+            <div style="flex:1">
+              <div style="font-weight:650;font-size:.86rem">LG전자 멤버십 앱 운영 및 고도화</div>
+              <div style="font-size:.72rem;color:var(--muted);margin-top:2px">이벤트 기획 · CMS 고도화 · QA · 운영 보고 · 데이터 기반 개선까지 전 운영 사이클 담당</div>
+            </div>
+            <div style="flex-shrink:0;text-align:right">
+              <span style="font-size:.68rem;font-weight:600;color:var(--violet);background:var(--violet-bg);padding:2px 8px;border-radius:4px">3년 6개월</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 핵심 역량 -->
+      <div style="margin-bottom:16px">
+        <div class="ov-label" style="margin-bottom:8px">핵심 역량</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <span style="font-size:.74rem;font-weight:600;padding:5px 12px;border-radius:6px;background:var(--ink);color:var(--white)">IA 설계</span>
+          <span style="font-size:.74rem;font-weight:600;padding:5px 12px;border-radius:6px;background:var(--ink);color:var(--white)">화면 설계</span>
+          <span style="font-size:.74rem;font-weight:600;padding:5px 12px;border-radius:6px;background:var(--ink);color:var(--white)">요구사항 정의</span>
+          <span style="font-size:.74rem;font-weight:600;padding:5px 12px;border-radius:6px;background:var(--bg);color:var(--sub);border:1px solid var(--line)">QA</span>
+          <span style="font-size:.74rem;font-weight:600;padding:5px 12px;border-radius:6px;background:var(--bg);color:var(--sub);border:1px solid var(--line)">Figma</span>
+          <span style="font-size:.74rem;font-weight:600;padding:5px 12px;border-radius:6px;background:var(--bg);color:var(--sub);border:1px solid var(--line)">Jira</span>
+          <span style="font-size:.74rem;font-weight:600;padding:5px 12px;border-radius:6px;background:var(--bg);color:var(--sub);border:1px solid var(--line)">Firebase</span>
+          <span onclick="goSlide(4)" style="cursor:pointer;font-size:.74rem;font-weight:600;padding:5px 12px;border-radius:6px;background:linear-gradient(135deg,#f0f7ff,#e8f1ff);color:#2563EB;border:1px solid rgba(37,99,235,.2);transition:box-shadow .2s" onmouseover="this.style.boxShadow='0 0 8px rgba(37,99,235,.2)'" onmouseout="this.style.boxShadow='none'">Claude Code <span style="font-size:.58rem;font-weight:700;padding:1px 5px;border-radius:3px;background:#2563EB;color:#fff;margin-left:2px;vertical-align:middle;letter-spacing:.5px">AI</span></span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ===== 03 골프장 — 구축 ===== -->
+<div class="slide" data-color="teal">
+  <div class="crumb"><span class="cdot teal"></span>Project 01 · 케도인리조트 홈페이지 <span class="sep">/</span> <span class="here">① 리뉴얼</span></div>
+  <div class="slide-scroll" style="align-items:center">
+    <div class="ct">
+      <span class="badge teal">Project 01</span>
+      <h2 style="display:flex;align-items:center;gap:10px">케도인리조트 홈페이지 리뉴얼 <a href="https://www.kedouin.com/eng/main" target="_blank" style="font-size:.68rem;font-weight:600;color:var(--teal);text-decoration:none;padding:3px 10px;border:1px solid rgba(13,148,136,.3);border-radius:4px;white-space:nowrap">사이트 보기 ↗</a></h2>
+
+      <div class="meta">
+        <span><strong>역할</strong> 기획 PL</span>
+        <span><strong>기간</strong> 2025.08 ~ 현재 (8개월)</span>
+        <span><strong>팀</strong> 기획1 디자인1 퍼블1 + 외부 개발사</span>
+      </div>
+
+      <p class="lead">
+        텍스트 나열형 사이트를 3개국어 반응형으로 전면 재구축하고, 예약 동선을 단축했습니다.
+      </p>
+
+      <h3 style="margin-bottom:8px">1차 배포 <span style="font-weight:400;font-size:.78rem;color:var(--muted)">2025.12.30</span></h3>
+      <ul class="wl" style="margin-bottom:12px">
+        <li>IA 재정의 · 사용자/관리자 화면 전체 설계</li>
+        <li>리조트·통합 예약 · 회원등급 등 기능 추가 요청 → 화면설계 반영</li>
+        <li>다국어 컨텐츠 관리 구조 설계 (어드민 언어별 개별 등록)</li>
+        <li>디자인·퍼블리셔 협업 · 외부 개발사 커뮤니케이션 · QA 후 배포</li>
+      </ul>
+
+      <div class="flow" style="margin-top:0;margin-bottom:16px">
+        <span class="fs">IA 재정의</span><span class="fa">→</span>
+        <span class="fs">화면 설계</span><span class="fa">→</span>
+        <span class="fs">기능 추가 대응</span><span class="fa">→</span>
+        <span class="fs">디자인 협업</span><span class="fa">→</span>
+        <span class="fs">QA</span><span class="fa">→</span>
+        <span class="fs on teal">1차 배포</span>
+      </div>
+
+      <!-- 이미지 3열 중앙정렬 -->
+      <div class="gallery g3" style="justify-content:center">
+        <figure onclick="openLB(this.querySelector('img'))">
+          <img src="images/kedouin_before.png" alt="Before">
+          <figcaption>Before · 텍스트 나열형</figcaption>
+        </figure>
+        <figure onclick="openLB(this.querySelector('img'))" style="position:relative">
+          <div style="position:absolute;top:4px;right:4px;font-size:.55rem;font-weight:700;color:rgba(200,50,50,.7);background:rgba(0,0,0,.06);padding:1px 6px;border-radius:3px;z-index:1">대외비</div>
+          <img src="images/kedouin_wireframe_main.png" alt="메인 레이아웃">
+          <figcaption>메인 화면 설계서</figcaption>
+        </figure>
+        <figure onclick="openLB(this.querySelector('img'))" style="position:relative">
+          <div style="position:absolute;top:4px;right:4px;font-size:.55rem;font-weight:700;color:rgba(200,50,50,.7);background:rgba(0,0,0,.06);padding:1px 6px;border-radius:3px;z-index:1">대외비</div>
+          <img src="images/kedouin_wireframe_detail.png" alt="메인 상세">
+          <figcaption>메인 상세 + Description</figcaption>
+        </figure>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 03-2 골프장 — 운영/고도화 ===== -->
+<div class="slide" data-color="teal">
+  <div class="crumb"><span class="cdot teal"></span>Project 01 · 케도인리조트 홈페이지 <span class="sep">/</span> <span class="here">② 운영 · 고도화</span></div>
+  <div class="slide-scroll" style="align-items:center">
+    <div class="ct">
+      <span class="badge teal">Project 01</span>
+      <h2>케도인리조트 홈페이지 리뉴얼</h2>
+
+      <p class="lead">
+        1차 배포 후 고객 요구사항을 수렴하여 단계적으로 고도화하고 있으며, PG 연동(2차)을 준비 중입니다.
+      </p>
+
+      <h3 style="margin-bottom:8px">운영 · 고도화 <span style="font-weight:400;font-size:.78rem;color:var(--muted)">2025.12 ~ 현재</span></h3>
+      <ul class="wl" style="margin-bottom:16px">
+        <li><strong>예약 프로세스 재설계</strong> — 통합예약 순서 변경, 동행자 정보·요청사항 입력 로직을 화면설계에 반영</li>
+        <li><strong>회원 등급 체계 반영</strong> — 등급별 요금제 차별화 → 예약·어드민 양쪽 화면 수정으로 대응</li>
+        <li><strong>다국어 운영 구조 개선</strong> — 어드민에서 언어별 컨텐츠 개별 등록 가능하도록 구조 재설계</li>
+        <li><strong>약 80건 수정 대응</strong> — 메인 팝업 추가, PG사 변경 등 변경사항을 화면설계 반영 후 퍼블·개발 전달</li>
+      </ul>
+
+      <h3 style="margin-bottom:8px">2차 배포 <span style="font-weight:400;font-size:.78rem;color:var(--muted)">2026.04 예정</span></h3>
+      <ul class="wl" style="margin-bottom:16px">
+        <li>소프트뱅크 PG 연동 → 온라인 예약 결제 기능 추가</li>
+      </ul>
+
+      <div class="gallery g3">
+        <figure onclick="openLB(this.querySelector('img'))" style="position:relative">
+          <div style="position:absolute;top:4px;right:4px;font-size:.55rem;font-weight:700;color:rgba(200,50,50,.7);background:rgba(0,0,0,.06);padding:1px 6px;border-radius:3px;z-index:1">대외비</div>
+          <img src="images/kedouin_rsv_calendar.png" alt="통합예약 캘린더">
+          <figcaption>통합예약 화면 설계</figcaption>
+        </figure>
+        <figure onclick="openLB(this.querySelector('img'))" style="position:relative">
+          <div style="position:absolute;top:4px;right:4px;font-size:.55rem;font-weight:700;color:rgba(200,50,50,.7);background:rgba(0,0,0,.06);padding:1px 6px;border-radius:3px;z-index:1">대외비</div>
+          <img src="images/kedouin_rsv_tee.png" alt="골프 예약 티타임">
+          <figcaption>골프 예약 · 동행자 입력</figcaption>
+        </figure>
+        <figure onclick="openLB(this.querySelector('img'))" style="position:relative">
+          <div style="position:absolute;top:4px;right:4px;font-size:.55rem;font-weight:700;color:rgba(200,50,50,.7);background:rgba(0,0,0,.06);padding:1px 6px;border-radius:3px;z-index:1">대외비</div>
+          <img src="images/kedouin_rsv_flow.png" alt="예약 프로세스 플로우">
+          <figcaption>리조트 예약 프로세스 (등급별 분기)</figcaption>
+        </figure>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 04 GS리테일 ===== -->
+<div class="slide" data-color="blue">
+  <div class="crumb"><span class="cdot blue"></span>Project 02 · GS리테일 홈페이지 <span class="sep">/</span> <span class="here">개요</span></div>
+  <div class="slide-scroll">
+    <div class="ct">
+      <span class="badge blue">Project 02</span>
+      <h2>GS리테일 홈페이지 리뉴얼</h2>
+
+      <div class="meta">
+        <span><strong>기간</strong> 2026.02 ~ (초기 분석 완료)</span>
+        <span><strong>역할</strong> RFP 분석 · 요구사항 정의 · IA 재설계</span>
+        <span><strong>범위</strong> PC/Mobile 반응형 웹</span>
+        <span><strong>상태</strong> 초기 분석 완료, 착수 대기</span>
+      </div>
+
+      <p class="lead blue">
+        RFP 분석부터 IA 재설계·요구사항 정의까지, 기획 초기 단계를 빠르게 완료했습니다.
+      </p>
+
+      <div class="flow">
+        <span class="fs on blue">RFP 분석</span><span class="fa">→</span>
+        <span class="fs on blue">As-is 분석</span><span class="fa">→</span>
+        <span class="fs on blue">To-be IA</span><span class="fa">→</span>
+        <span class="fs on blue">요구사항 정의</span><span class="fa">→</span>
+        <span class="fs">제안서</span><span class="fa">→</span>
+        <span class="fs">설계</span>
+      </div>
+
+      <ul class="wl">
+        <li><strong>핵심 판단</strong> — 커머스·멤버십 기능을 "역할 분리" → 기업 크리덴셜 사이트로 재정의</li>
+        <li><strong>IA 재설계</strong> — 어드민 신규 설계 필요성이 대두되며 IA 재정의 진행 중</li>
+        <li><strong>요구사항 정의</strong> — RFP 기반으로 기능·설계·보안·운영 등 요구사항 도출</li>
+        <li><strong>Claude Code 활용</strong> <span style="font-size:.58rem;font-weight:700;padding:1px 5px;border-radius:3px;background:#2563EB;color:#fff;margin-left:2px;vertical-align:middle;letter-spacing:.5px">AI</span> — 소통 비용을 줄이기 위해 단기간에 컨셉·방향성을 잡는 작업에 활용, 빠르게 시안을 만들어 팀 싱크 후 의사결정 속도 향상</li>
+      </ul>
+
+      <div class="gallery g3">
+        <figure onclick="openLB(this.querySelector('img'))" style="position:relative">
+          <div style="position:absolute;top:4px;right:4px;font-size:.55rem;font-weight:700;color:rgba(200,50,50,.7);background:rgba(0,0,0,.06);padding:1px 6px;border-radius:3px;z-index:1">대외비</div>
+          <img src="images/gs_overview.png" alt="프로젝트 개요">
+          <figcaption>추진 배경 · 리뉴얼 방향성</figcaption>
+        </figure>
+        <figure onclick="openLB(this.querySelector('img'))" style="position:relative">
+          <div style="position:absolute;top:4px;right:4px;font-size:.55rem;font-weight:700;color:rgba(200,50,50,.7);background:rgba(0,0,0,.06);padding:1px 6px;border-radius:3px;z-index:1">대외비</div>
+          <img src="images/gs_ia.png" alt="IA 구조 변경">
+          <figcaption>IA 구조 변경 (120p → 38p)</figcaption>
+        </figure>
+        <figure onclick="openLB(this.querySelector('img'))" style="position:relative">
+          <div style="position:absolute;top:4px;right:4px;font-size:.55rem;font-weight:700;color:rgba(200,50,50,.7);background:rgba(0,0,0,.06);padding:1px 6px;border-radius:3px;z-index:1">대외비</div>
+          <img src="images/gs_req.png" alt="요구사항 정의">
+          <figcaption>요구사항 정의</figcaption>
+        </figure>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 05 LG 개요 ===== -->
+<div class="slide" data-color="violet">
+  <div class="crumb"><span class="cdot violet"></span>Project 03 · LG전자 멤버십 <span class="sep">/</span> <span class="here">개요</span></div>
+  <div class="slide-scroll">
+    <div class="ct">
+      <span class="badge violet">Project 03</span>
+      <h2>LG전자 멤버십 앱 운영 및 고도화</h2>
+
+      <div class="meta">
+        <span><strong>기간</strong> 2021.04 ~ 2024.11 (3년 6개월)</span>
+        <span><strong>역할</strong> 운영 기획자</span>
+        <span><strong>소속</strong> ㈜지엠솔루션</span>
+        <span><strong>팀</strong> 기획2 · 디자인1 · 퍼블1 · 웹개발2 · 앱개발2</span>
+      </div>
+
+      <p class="lead violet">
+        운영 데이터를 근거로 이벤트 방향을 직접 제안하고, 서비스 운영 전반을 주도했습니다.
+      </p>
+
+      <ul class="wl">
+        <li><strong>이벤트 기획</strong> — 데이터 분석 → 방향 제안 → 화면 기획 → QA → 오픈</li>
+        <li><strong>CMS 고도화</strong> — 백오피스 구조 재설계, 운영 자율성 확보</li>
+        <li><strong>품질 관리</strong> — 전담 QA팀 없이 기획자가 직접 TC 작성·검증·배포</li>
+        <li><strong>월간 보고</strong> — Firebase 기반 유입·이탈 분석, 다음 달 기획 근거로 활용</li>
+      </ul>
+
+      <!-- 좌: 앱 스크린 / 우: 통계 -->
+      <div style="display:flex;gap:20px;align-items:center;margin:16px 0">
+        <div class="screens" style="flex:1;margin:0;gap:8px">
+          <img src="images/p5_img1.jpeg" alt="앱 메인" onclick="openLB(this)" style="height:280px">
+          <img src="images/p5_img2.jpeg" alt="이벤트" onclick="openLB(this)" style="height:280px">
+          <img src="images/p5_img3.png" alt="제품 등록" onclick="openLB(this)" style="height:280px">
+        </div>
+        <div style="flex-shrink:0;display:flex;flex-direction:column;gap:8px;min-width:140px">
+          <div class="stat"><div class="sv violet">90%</div><div class="sd">이벤트 승인율</div></div>
+          <div class="stat"><div class="sv violet">&lt;10%</div><div class="sd">업데이트 이슈율</div><div style="font-size:.6rem;color:var(--muted)">앱콘솔 크래시 기준</div></div>
+          <div class="stat"><div class="sv violet">99%</div><div class="sd">일정 준수율</div><div style="font-size:.6rem;color:var(--muted)">JIRA 기준 지연 ~0건</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 05 CMS 고도화 ===== -->
+<div class="slide" data-color="violet">
+  <div class="crumb"><span class="cdot violet"></span>Project 03 · LG전자 멤버십 <span class="sep">/</span> <span class="here">① CMS 고도화</span></div>
+  <div class="slide-scroll">
+    <div class="ct">
+      <span class="badge violet">Project 03</span>
+      <h2><span class="sn violet">1</span>어드민(CMS) 고도화 기획</h2>
+
+      <p class="lead violet">
+        콘텐츠 수정마다 개발 공수가 발생하던 구조를, CMS 재설계로 운영 비용을 줄였습니다.
+      </p>
+
+      <ul class="wl">
+        <li><strong>문제</strong> — 배너 등록·수정 시마다 개발 요청 필요 → 운영 병목</li>
+        <li><strong>해결</strong> — 배너 관리 영역 신규 추가, 기존 관리 기능 개선</li>
+        <li><strong>구조</strong> — 백오피스 ↔ 프론트 연계 재설계로 운영 자율성 확보</li>
+      </ul>
+
+      <div class="flow">
+        <span class="fs">문제 정의</span><span class="fa">→</span>
+        <span class="fs">기본 정의서</span><span class="fa">→</span>
+        <span class="fs">어드민 화면 기획</span><span class="fa">→</span>
+        <span class="fs">프론트 연계 기획</span><span class="fa">→</span>
+        <span class="fs on violet">반영</span>
+      </div>
+
+      <div class="gallery g3">
+        <figure onclick="openLB(this.querySelector('img'))" style="position:relative"><div style="position:absolute;top:4px;right:4px;font-size:.55rem;font-weight:700;color:rgba(200,50,50,.7);background:rgba(0,0,0,.06);padding:1px 6px;border-radius:3px;z-index:1">대외비</div><img src="images/p10_img1.png" alt="정의서"><figcaption>기본 정의서</figcaption></figure>
+        <figure onclick="openLB(this.querySelector('img'))" style="position:relative"><div style="position:absolute;top:4px;right:4px;font-size:.55rem;font-weight:700;color:rgba(200,50,50,.7);background:rgba(0,0,0,.06);padding:1px 6px;border-radius:3px;z-index:1">대외비</div><img src="images/p10_img2.png" alt="어드민"><figcaption>어드민 화면 기획</figcaption></figure>
+        <figure onclick="openLB(this.querySelector('img'))" style="position:relative"><div style="position:absolute;top:4px;right:4px;font-size:.55rem;font-weight:700;color:rgba(200,50,50,.7);background:rgba(0,0,0,.06);padding:1px 6px;border-radius:3px;z-index:1">대외비</div><img src="images/p10_img3.png" alt="프론트"><figcaption>백오피스 → 프론트 연계</figcaption></figure>
+      </div>
+
+      <div class="result violet">
+        <strong>개발 요청 없이</strong> 운영팀 직접 배너 등록·수정 가능 · 백오피스↔프론트 <strong>연계 구조 재설계</strong> → 콘텐츠 운영 자율성 확보
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 06 이벤트 기획 ===== -->
+<div class="slide" data-color="violet">
+  <div class="crumb"><span class="cdot violet"></span>Project 03 · LG전자 멤버십 <span class="sep">/</span> <span class="here">② 이벤트 기획</span></div>
+  <div class="slide-scroll">
+    <div class="ct">
+      <span class="badge violet">Project 03</span>
+      <h2><span class="sn violet">2</span>데이터 기반 이벤트 기획</h2>
+
+      <p class="lead violet">
+        운영 데이터에서 사용자 행동과 클라이언트 요청의 괴리를 발견하고, 이벤트 방향을 직접 제안했습니다.
+      </p>
+
+      <ul class="wl">
+        <li><strong>근거</strong> — 월간 보고서의 유입·이탈 데이터 분석</li>
+        <li><strong>제안</strong> — 이탈률 높은 시점에 출석체크·SNS 홍보 이벤트 기획</li>
+        <li><strong>실행</strong> — 프로세스 정의 → 화면 기획 → TC 작성 → 일정 조율 → 오픈</li>
+      </ul>
+
+      <div class="aside">
+        <strong>사례</strong> — 타임딜 참여 지표 부진을 보고서에서 포착 → 출석체크 화면에 타임딜 일정 사전 노출을 제안 → 승인 후 반영, 타임딜 유입 개선
+      </div>
+
+      <div class="flow">
+        <span class="fs">데이터 분석</span><span class="fa">→</span>
+        <span class="fs">이벤트 제안</span><span class="fa">→</span>
+        <span class="fs">프로세스 정의</span><span class="fa">→</span>
+        <span class="fs">화면 기획</span><span class="fa">→</span>
+        <span class="fs">TC · QA</span><span class="fa">→</span>
+        <span class="fs on violet">오픈</span>
+      </div>
+
+      <div class="gallery g3">
+        <figure onclick="openLB(this.querySelector('img'))" style="position:relative"><div style="position:absolute;top:4px;right:4px;font-size:.55rem;font-weight:700;color:rgba(200,50,50,.7);background:rgba(0,0,0,.06);padding:1px 6px;border-radius:3px;z-index:1">대외비</div><img src="images/p6_img1.jpeg" alt="프로세스"><figcaption>프로세스 정의</figcaption></figure>
+        <figure onclick="openLB(this.querySelector('img'))" style="position:relative"><div style="position:absolute;top:4px;right:4px;font-size:.55rem;font-weight:700;color:rgba(200,50,50,.7);background:rgba(0,0,0,.06);padding:1px 6px;border-radius:3px;z-index:1">대외비</div><img src="images/p6_img2.jpeg" alt="화면"><figcaption>이벤트 화면 기획</figcaption></figure>
+        <figure onclick="openLB(this.querySelector('img'))" style="position:relative"><div style="position:absolute;top:4px;right:4px;font-size:.55rem;font-weight:700;color:rgba(200,50,50,.7);background:rgba(0,0,0,.06);padding:1px 6px;border-radius:3px;z-index:1">대외비</div><img src="images/p6_img3.png" alt="TC"><figcaption>테스트케이스</figcaption></figure>
+      </div>
+
+      <div class="result violet">
+        데이터 기반 제안으로 <strong>클라이언트 승인율 90%</strong> 달성 · <strong>일정 준수율 99%</strong>(JIRA 기준 지연 ~0건)
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 07 운영 보고서 ===== -->
+<div class="slide" data-color="violet">
+  <div class="crumb"><span class="cdot violet"></span>Project 03 · LG전자 멤버십 <span class="sep">/</span> <span class="here">③ 운영 보고서</span></div>
+  <div class="slide-scroll">
+    <div class="ct">
+      <span class="badge violet">Project 03</span>
+      <h2><span class="sn violet">3</span>월간 운영 보고서 (Firebase)</h2>
+
+      <p class="lead violet">
+        월별 사용자 지표를 정리하고, 이를 다음 달 이벤트 기획 근거로 연결하는 선순환 구조를 만들었습니다.
+      </p>
+
+      <ul class="wl">
+        <li><strong>데이터 소스</strong> — Firebase, Google Play Console, Apple Developer</li>
+        <li><strong>분석 내용</strong> — 월별 유입·이탈·DAU 추이, 이상치 탐지</li>
+        <li><strong>활용</strong> — 이탈률 급증 → 출석체크 이벤트 제안 등 기획 의사결정에 직접 연결</li>
+      </ul>
+
+      <div class="aside">
+        <strong>사례 — 타임딜 → 출석체크 연계</strong><br>
+        초창기 타임딜 이벤트의 참여 지표가 낮은 것을 보고서에서 포착 → 출석체크 이벤트에 해당 월 타임딜 일정을 사전 노출하는 방식을 제안·반영하여 타임딜 유입을 개선했습니다.
+      </div>
+
+      <div class="gallery g2">
+        <figure onclick="openLB(this.querySelector('img'))" style="position:relative"><div style="position:absolute;top:4px;right:4px;font-size:.55rem;font-weight:700;color:rgba(200,50,50,.7);background:rgba(0,0,0,.06);padding:1px 6px;border-radius:3px;z-index:1">대외비</div><img src="images/p9_img1.png" alt="데이터"><figcaption>월별 다운로드·사용자 데이터</figcaption></figure>
+        <figure onclick="openLB(this.querySelector('img'))" style="position:relative"><div style="position:absolute;top:4px;right:4px;font-size:.55rem;font-weight:700;color:rgba(200,50,50,.7);background:rgba(0,0,0,.06);padding:1px 6px;border-radius:3px;z-index:1">대외비</div><img src="images/p9_img2.png" alt="그래프"><figcaption>연도별 설치·사용자 수 추이</figcaption></figure>
+      </div>
+
+      <div class="result violet">
+        유입·이탈 <strong>분석 체계 구축</strong> → 이벤트 기획 시 <strong>데이터 근거</strong>로 활용 · 제안 설득력 향상
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 08 품질관리 ===== -->
+<div class="slide" data-color="violet">
+  <div class="crumb"><span class="cdot violet"></span>Project 03 · LG전자 멤버십 <span class="sep">/</span> <span class="here">④ 품질 관리</span></div>
+  <div class="slide-scroll">
+    <div class="ct">
+      <span class="badge violet">Project 03</span>
+      <h2><span class="sn violet">4</span>품질 관리 — 점검 · QA · 모니터링</h2>
+
+      <p class="lead violet">
+        전담 QA팀 없이, 기획 의도를 가장 잘 아는 기획자가 직접 품질 관리 전반을 수행하여 서비스 안정성을 책임졌습니다.
+      </p>
+
+      <ul class="wl">
+        <li>사용자 시나리오 기반 일일 앱 기능 점검</li>
+        <li>앱 DAU 모니터링(Firebase) · 비정상 종료 파악 및 대응</li>
+        <li>배포 전 테스트케이스 작성 · 운영환경 QA 직접 수행</li>
+        <li>검증 완료 후 앱 스토어 직접 게시 (Google Play, App Store, One Store)</li>
+        <li>일간 사용자 피드백(앱 리뷰) 모니터링 및 대응</li>
+        <li>웹 접근성 가이드라인 검수 (블라인드 텍스트 · 색상 대비 등 화면 단위 검수)</li>
+      </ul>
+
+      <div class="gallery g4">
+        <figure onclick="openLB(this.querySelector('img'))" style="position:relative"><div style="position:absolute;top:4px;right:4px;font-size:.55rem;font-weight:700;color:rgba(200,50,50,.7);background:rgba(0,0,0,.06);padding:1px 6px;border-radius:3px;z-index:1">대외비</div><img src="images/p7_img1.png" alt="점검"><figcaption>시나리오 기반 점검</figcaption></figure>
+        <figure onclick="openLB(this.querySelector('img'))" style="position:relative"><div style="position:absolute;top:4px;right:4px;font-size:.55rem;font-weight:700;color:rgba(200,50,50,.7);background:rgba(0,0,0,.06);padding:1px 6px;border-radius:3px;z-index:1">대외비</div><img src="images/p7_img3.png" alt="DAU"><figcaption>DAU 모니터링</figcaption></figure>
+        <figure onclick="openLB(this.querySelector('img'))" style="position:relative"><div style="position:absolute;top:4px;right:4px;font-size:.55rem;font-weight:700;color:rgba(200,50,50,.7);background:rgba(0,0,0,.06);padding:1px 6px;border-radius:3px;z-index:1">대외비</div><img src="images/p8_img1.png" alt="TC"><figcaption>테스트케이스</figcaption></figure>
+        <figure onclick="openLB(this.querySelector('img'))" style="position:relative"><div style="position:absolute;top:4px;right:4px;font-size:.55rem;font-weight:700;color:rgba(200,50,50,.7);background:rgba(0,0,0,.06);padding:1px 6px;border-radius:3px;z-index:1">대외비</div><img src="images/p7_img4.png" alt="크래시"><figcaption>비정상 종료 모니터링</figcaption></figure>
+      </div>
+
+      <div class="result violet">
+        업데이트 이슈율 <strong>&lt;10%</strong>(앱콘솔 크래시 기준) · 버그·비정상 종료 <strong>조기 발견 체계</strong> 구축 · JIRA 기반 <strong>테스트 효율 향상</strong>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 09 CLOSING ===== -->
+<div class="slide dark" data-color="default">
+  <div class="slide-scroll">
+    <div class="ct" style="display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center">
+      <div style="width:48px;height:2px;background:var(--blue);margin:0 auto 28px"></div>
+      <h2 style="color:var(--white);font-size:1.6rem;margin-bottom:10px">감사합니다.</h2>
+      <p style="color:rgba(255,255,255,.45);font-size:.9rem;margin-bottom:32px;line-height:1.8">
+        운영의 정밀함 위에 설계의 시야를 더해가는 기획자,<br>이준경입니다.
+      </p>
+      <div style="display:flex;gap:28px">
+        <a href="mailto:jklee199809@gmail.com" style="color:rgba(255,255,255,.55);text-decoration:none;font-size:.82rem">jklee199809@gmail.com</a>
+        <span style="color:rgba(255,255,255,.55);font-size:.82rem">010-9599-8227</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" onclick="closeLB()">
+  <button class="lb-close" onclick="closeLB()">&times;</button>
+  <div style="position:relative;display:flex;align-items:center;justify-content:center">
+    <img id="lbImg" src="" alt="">
+    <span class="wm">대 외 비</span>
+  </div>
+</div>
+
+<!-- Nav -->
+<nav class="nav">
+  <span class="nav-pg" id="pageInfo">1 / 11</span>
+  <div class="nav-dots" id="navDots"></div>
+  <div class="nav-arrows">
+    <button class="nav-btn" id="prevBtn" onclick="go(current-1)" disabled>&#8592;</button>
+    <button class="nav-btn" id="nextBtn" onclick="go(current+1)">&#8594;</button>
+  </div>
+</nav>
+
+<script>
+  const deck=document.getElementById('deck'),slides=document.querySelectorAll('.slide'),N=slides.length;
+  let current=0;
+  const cm=[];slides.forEach(s=>cm.push('c-'+(s.dataset.color||'default')));
+  const dots=document.getElementById('navDots');
+  for(let i=0;i<N;i++){const d=document.createElement('button');d.className='nav-dot '+cm[i]+(i===0?' active':'');d.onclick=()=>go(i);dots.appendChild(d)}
+  function go(n){
+    if(n<0||n>=N)return;current=n;
+    deck.style.transform=`translateX(-${current*100}vw)`;
+    document.getElementById('pageInfo').textContent=`${current+1} / ${N}`;
+    document.querySelectorAll('.nav-dot').forEach((d,i)=>d.className='nav-dot '+cm[i]+(i===current?' active':''));
+    document.getElementById('prevBtn').disabled=current===0;
+    document.getElementById('nextBtn').disabled=current===N-1;
+    slides[current].querySelector('.slide-scroll').scrollTop=0;
+  }
+  document.addEventListener('keydown',e=>{
+    if(document.getElementById('lightbox').classList.contains('open')){if(e.key==='Escape')closeLB();return}
+    if(e.key==='ArrowRight'){e.preventDefault();go(current+1)}
+    if(e.key==='ArrowLeft'){e.preventDefault();go(current-1)}
+  });
+  let tx=0;
+  document.addEventListener('touchstart',e=>tx=e.changedTouches[0].screenX);
+  document.addEventListener('touchend',e=>{
+    if(document.getElementById('lightbox').classList.contains('open'))return;
+    const d=tx-e.changedTouches[0].screenX;if(Math.abs(d)>50)go(current+(d>0?1:-1));
+  });
+  let wt;
+  document.addEventListener('wheel',e=>{
+    if(document.getElementById('lightbox').classList.contains('open'))return;
+    if(Math.abs(e.deltaX)>Math.abs(e.deltaY)){e.preventDefault();clearTimeout(wt);wt=setTimeout(()=>{if(e.deltaX>20)go(current+1);else if(e.deltaX<-20)go(current-1)},50)}
+  },{passive:false});
+  function openLB(img){event.stopPropagation();document.getElementById('lbImg').src=img.src;document.getElementById('lightbox').classList.add('open')}
+  function closeLB(){document.getElementById('lightbox').classList.remove('open')}
+</script>
+
+</body>
+</html>
