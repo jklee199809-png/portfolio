@@ -90,6 +90,21 @@
     .nav-btn:hover{border-color:var(--ink);color:var(--ink)}
     .nav-btn:disabled{opacity:.2;pointer-events:none}
 
+    /* Side arrows */
+    .side-arrow{
+      position:fixed;top:50%;transform:translateY(-50%);z-index:90;
+      width:44px;height:80px;border:none;border-radius:10px;
+      background:rgba(0,0,0,.04);color:var(--muted);
+      font-size:1.3rem;cursor:pointer;
+      display:flex;align-items:center;justify-content:center;
+      opacity:0;transition:opacity .25s,background .2s,color .2s;
+    }
+    .side-arrow:hover{background:rgba(0,0,0,.09);color:var(--ink)}
+    .side-arrow:disabled{display:none}
+    .side-arrow.left{left:16px}
+    .side-arrow.right{right:16px}
+    body:hover .side-arrow:not(:disabled){opacity:1}
+
     /* Type */
     h1{font-size:2.4rem;font-weight:800;line-height:1.25;letter-spacing:-.02em}
     h2{font-size:1.3rem;font-weight:700;line-height:1.4;letter-spacing:-.01em;margin-bottom:16px}
@@ -256,6 +271,9 @@
       .screens img{height:180px}
       .crumb{padding:0 20px}
       .nav-dots{display:none}
+      .side-arrow{width:32px;height:56px;font-size:1rem}
+      .side-arrow.left{left:6px}
+      .side-arrow.right{right:6px}
       .stats{flex-wrap:wrap}
       .stat{min-width:calc(50% - 5px)}
     }
@@ -804,6 +822,10 @@
   </div>
 </div>
 
+<!-- Side Arrows -->
+<button class="side-arrow left" id="sideLeft" onclick="go(current-1)" disabled>&#8249;</button>
+<button class="side-arrow right" id="sideRight" onclick="go(current+1)">&#8250;</button>
+
 <!-- Nav -->
 <nav class="nav">
   <span class="nav-pg" id="pageInfo">1 / 11</span>
@@ -827,6 +849,8 @@
     document.querySelectorAll('.nav-dot').forEach((d,i)=>d.className='nav-dot '+cm[i]+(i===current?' active':''));
     document.getElementById('prevBtn').disabled=current===0;
     document.getElementById('nextBtn').disabled=current===N-1;
+    document.getElementById('sideLeft').disabled=current===0;
+    document.getElementById('sideRight').disabled=current===N-1;
     slides[current].querySelector('.slide-scroll').scrollTop=0;
   }
   document.addEventListener('keydown',e=>{
