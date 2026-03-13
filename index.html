@@ -873,6 +873,14 @@
     if(document.getElementById('lightbox').classList.contains('open'))return;
     const d=tx-e.changedTouches[0].screenX;if(Math.abs(d)>50)go(current+(d>0?1:-1));
   });
+  let mx=0,dragging=false;
+  document.addEventListener('mousedown',e=>{if(e.button===0){mx=e.screenX;dragging=true}});
+  document.addEventListener('mousemove',e=>{if(dragging)e.preventDefault()});
+  document.addEventListener('mouseup',e=>{
+    if(!dragging)return;dragging=false;
+    if(document.getElementById('lightbox').classList.contains('open'))return;
+    const d=mx-e.screenX;if(Math.abs(d)>60)go(current+(d>0?1:-1));
+  });
   let wt;
   document.addEventListener('wheel',e=>{
     if(document.getElementById('lightbox').classList.contains('open'))return;
